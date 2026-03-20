@@ -1,0 +1,28 @@
+[package]
+name = "test1"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+env_logger = "0.11.8"
+flamegraph = "0.6.8"
+log = "0.4.27"
+rayon = "1.10.0"
+rustc-hash = "2.1.1"
+smallvec = "1.15.1"
+
+[profile.dev]
+opt-level = 3
+
+[profile.release]
+debug = true
+opt-level = 3
+lto = true
+
+[profile.release.package."*"]
+opt-level = 3 
+
+[features]
+dhat-heap = []
+render = []
+render-all = ["render"]

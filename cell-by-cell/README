@@ -1,0 +1,42 @@
+# Cell by Cell Code 20 Solver
+
+## Run the Program
+
+For rendering to work, YOU MUST INSTALL imagemagick.
+
+Install rust (with rustup or rustc), then simply run `cargo r` for a normal run or `cargo r --release` for an optimized run (configured to be very optimized at the cost of compilation time). Results are saved to `output.txt` as well as to `renders/`.
+
+Currently it is set up to loop through all periods from 1 to 50 and try to find solutions. I expect periods less than 10 to be decently fast, but it slows down exponentially from there. It's parallelized and IMO pretty optimized, but let me know if you have suggestions. 
+
+CURRENTLY, SHIFTS/GLIDERS ARE BROKEN. I don't know why, but I will investigate further later. Stick to `s=0`.
+
+## Methodology
+This method tries to find persistent structures one cell at a time, from right to left. It uses bitwise integer arithmetic for speed. This means that the width of the solutions may be limited by the width of the integers. Beware of this!
+
+Bit indices are as follows:
+
+```
+n = 0b10111101
+   -> 76543210
+```
+
+Call the index of the bit of the output we are solving for `len`.
+
+In order to determine the nth bit of the output (e.g. the 0th bit), then the bits up to and including 2p must be known (e.g. if searching for a period 2 solution, bits 0, 1, 2, 3, and 4 of the input must be known).
+
+At the beginning (`len=0`), we should pad all but one of these bits with zeros. So the first number searched with `p=2`, `s=0` is `0b10000`. This guarantees that the 0th output bit is also a 0.
+
+In order for a number to potentially work as a solution, the last `len` bits of the input must match the last `len` bits of the output. (The output is the result of running the input for `p` steps)This guarantees periodicity, and therefore persistence.
+If this property does not hold, then the number being searched should be discarded. Otherwise, you can continue.
+
+In the case of our initial number `0b10000`, this property holds, because the output is `0b00000`.
+Next, we search the next bit recursively by incrementing `len` and adding one more bit to the left of our number: either `0b110000` or `0b010000`.
+
+For each of these numbers, we again check periodicity, and recurse again, etc.
+
+A solution is found if the input and the output match exactly across all bits. In that case, additional checks can be made to ensure that it is unique and that it is not subperiodic (e.g. a period 2 automata can also be period 6).
+
+
+In addition to checking periodicity, a number of other checks can be made, which considerably reduce the search space. For example, if three consecutive columns are known to be empty, then it means that no information has been propagated through it. Therefore it is either a working solution (which would've been checked for during previous iterations), or a composite of multiple solutions (e.g. `0b1011110100010111101`), which can be discarded.
+
+If you have any more ideas for checks like this one, IT WOULD BE VERY MUCH APPRECIATED. Even a rare or simple check may significantly improve runtime.

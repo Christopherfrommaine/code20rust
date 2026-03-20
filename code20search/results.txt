@@ -1,0 +1,15 @@
+Novel persistent structures:
+Period 6: 5620936261115882396638
+
+Search Results:
+Up to 1000 cells, no non-diagonal period 7 automata exists
+Up to 1000, no 9 period
+Up to 1000, no 11 period
+
+Checked up to 15 steps
+
+
+Nothing new in period 10 up to width 250
+
+13 ran for 3+ hours with Nothing
+

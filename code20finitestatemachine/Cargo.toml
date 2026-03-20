@@ -1,0 +1,8 @@
+[package]
+name = "code20finitestatemachine"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cgrustplot = "1.2.0"
+rayon = "1.10.0"

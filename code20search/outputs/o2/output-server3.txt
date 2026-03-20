@@ -1,0 +1,304 @@
+Solution Found for period 1!
+State: 189
+s UNSATISFIABLE for period 2 and width 8
+█ ████ █                                                                                                                                                                                                                                                        
+█ ████ █                                                                                                                                                                                                                                                        
+█ ████ █                                                                                                                                                                                                                                                        
+█ ████ █                                                                                                                                                                                                                                                        
+█ ████ █                                                                                                                                                                                                                                                        
+s UNSATISFIABLE for period 3 and width 8
+Solution Found for period 2!
+State: 29824
+s UNSATISFIABLE for period 5 and width 8
+s UNSATISFIABLE for period 7 and width 8
+s UNSATISFIABLE for period 6 and width 8
+s UNSATISFIABLE for period 8 and width 8
+s UNSATISFIABLE for period 4 and width 8
+       █  █ ███                                                                                                                                                                                                                                                 
+        ███ █  █                                                                                                                                                                                                                                                
+       █  █ ███                                                                                                                                                                                                                                                 
+        ███ █  █                                                                                                                                                                                                                                                
+       █  █ ███                                                                                                                                                                                                                                                 
+        ███ █  █                                                                                                                                                                                                                                                
+       █  █ ███                                                                                                                                                                                                                                                 
+        ███ █  █                                                                                                                                                                                                                                                
+       █  █ ███                                                                                                                                                                                                                                                 
+        ███ █  █                                                                                                                                                                                                                                                
+s UNSATISFIABLE for period 9 and width 8
+s UNSATISFIABLE for period 3 and width 9
+s UNSATISFIABLE for period 5 and width 9
+s UNSATISFIABLE for period 6 and width 9
+s UNSATISFIABLE for period 4 and width 9
+s UNSATISFIABLE for period 8 and width 9
+s UNSATISFIABLE for period 7 and width 9
+s UNSATISFIABLE for period 3 and width 10
+s UNSATISFIABLE for period 9 and width 9
+s UNSATISFIABLE for period 4 and width 10
+s UNSATISFIABLE for period 5 and width 10
+s UNSATISFIABLE for period 3 and width 11
+s UNSATISFIABLE for period 6 and width 10
+s UNSATISFIABLE for period 5 and width 11
+s UNSATISFIABLE for period 3 and width 12
+s UNSATISFIABLE for period 4 and width 11
+s UNSATISFIABLE for period 8 and width 10
+s UNSATISFIABLE for period 7 and width 10
+s UNSATISFIABLE for period 3 and width 13
+s UNSATISFIABLE for period 9 and width 10
+s UNSATISFIABLE for period 6 and width 11
+s UNSATISFIABLE for period 3 and width 14
+s UNSATISFIABLE for period 4 and width 12
+s UNSATISFIABLE for period 3 and width 15
+s UNSATISFIABLE for period 5 and width 12
+s UNSATISFIABLE for period 4 and width 13
+s UNSATISFIABLE for period 3 and width 16
+s UNSATISFIABLE for period 8 and width 11
+s UNSATISFIABLE for period 7 and width 11
+s UNSATISFIABLE for period 9 and width 11
+s UNSATISFIABLE for period 6 and width 12
+s UNSATISFIABLE for period 3 and width 17
+s UNSATISFIABLE for period 5 and width 13
+s UNSATISFIABLE for period 4 and width 14
+s UNSATISFIABLE for period 3 and width 18
+s UNSATISFIABLE for period 4 and width 15
+s UNSATISFIABLE for period 5 and width 14
+s UNSATISFIABLE for period 3 and width 19
+s UNSATISFIABLE for period 6 and width 13
+s UNSATISFIABLE for period 7 and width 12
+s UNSATISFIABLE for period 8 and width 12
+s UNSATISFIABLE for period 9 and width 12
+s UNSATISFIABLE for period 3 and width 20
+s UNSATISFIABLE for period 4 and width 16
+s UNSATISFIABLE for period 5 and width 15
+s UNSATISFIABLE for period 3 and width 21
+s UNSATISFIABLE for period 4 and width 17
+s UNSATISFIABLE for period 5 and width 16
+s UNSATISFIABLE for period 6 and width 14
+s UNSATISFIABLE for period 3 and width 22
+s UNSATISFIABLE for period 4 and width 18
+s UNSATISFIABLE for period 7 and width 13
+s UNSATISFIABLE for period 5 and width 17
+s UNSATISFIABLE for period 3 and width 23
+s UNSATISFIABLE for period 4 and width 19
+s UNSATISFIABLE for period 8 and width 13
+s UNSATISFIABLE for period 3 and width 24
+s UNSATISFIABLE for period 9 and width 13
+s UNSATISFIABLE for period 6 and width 15
+s UNSATISFIABLE for period 4 and width 20
+Solution Found for period 4!
+State: 5370472
+   █ ██  █  █████   █ █                                                                                                                                                                                                                                         
+   █  █ █ █  █ █ ██ ███                                                                                                                                                                                                                                         
+    ████ ██████    ██  █                                                                                                                                                                                                                                        
+   █ ██████  █ █  ███ █                                                                                                                                                                                                                                         
+   █ ██  █  █████   █ █                                                                                                                                                                                                                                         
+   █  █ █ █  █ █ ██ ███                                                                                                                                                                                                                                         
+    ████ ██████    ██  █                                                                                                                                                                                                                                        
+   █ ██████  █ █  ███ █                                                                                                                                                                                                                                         
+   █ ██  █  █████   █ █                                                                                                                                                                                                                                         
+   █  █ █ █  █ █ ██ ███                                                                                                                                                                                                                                         
+    ████ ██████    ██  █                                                                                                                                                                                                                                        
+   █ ██████  █ █  ███ █                                                                                                                                                                                                                                         
+   █ ██  █  █████   █ █                                                                                                                                                                                                                                         
+   █  █ █ █  █ █ ██ ███                                                                                                                                                                                                                                         
+    ████ ██████    ██  █                                                                                                                                                                                                                                        
+   █ ██████  █ █  ███ █                                                                                                                                                                                                                                         
+   █ ██  █  █████   █ █                                                                                                                                                                                                                                         
+   █  █ █ █  █ █ ██ ███                                                                                                                                                                                                                                         
+    ████ ██████    ██  █                                                                                                                                                                                                                                        
+   █ ██████  █ █  ███ █                                                                                                                                                                                                                                         
+s UNSATISFIABLE for period 3 and width 25
+s UNSATISFIABLE for period 5 and width 18
+s UNSATISFIABLE for period 7 and width 14
+s UNSATISFIABLE for period 3 and width 26
+s UNSATISFIABLE for period 8 and width 14
+s UNSATISFIABLE for period 6 and width 16
+s UNSATISFIABLE for period 5 and width 19
+s UNSATISFIABLE for period 3 and width 27
+s UNSATISFIABLE for period 7 and width 15
+s UNSATISFIABLE for period 3 and width 28
+s UNSATISFIABLE for period 6 and width 17
+s UNSATISFIABLE for period 9 and width 14
+s UNSATISFIABLE for period 3 and width 29
+s UNSATISFIABLE for period 5 and width 20
+s UNSATISFIABLE for period 3 and width 30
+s UNSATISFIABLE for period 8 and width 15
+s UNSATISFIABLE for period 6 and width 18
+s UNSATISFIABLE for period 7 and width 16
+s UNSATISFIABLE for period 3 and width 31
+s UNSATISFIABLE for period 5 and width 21
+s UNSATISFIABLE for period 3 and width 32
+s UNSATISFIABLE for period 3 and width 33
+s UNSATISFIABLE for period 6 and width 19
+s UNSATISFIABLE for period 5 and width 22
+s UNSATISFIABLE for period 3 and width 34
+s UNSATISFIABLE for period 7 and width 17
+s UNSATISFIABLE for period 9 and width 15
+s UNSATISFIABLE for period 8 and width 16
+s UNSATISFIABLE for period 3 and width 35
+s UNSATISFIABLE for period 6 and width 20
+s UNSATISFIABLE for period 5 and width 23
+s UNSATISFIABLE for period 3 and width 36
+s UNSATISFIABLE for period 7 and width 18
+s UNSATISFIABLE for period 3 and width 37
+s UNSATISFIABLE for period 5 and width 24
+s UNSATISFIABLE for period 6 and width 21
+s UNSATISFIABLE for period 3 and width 38
+s UNSATISFIABLE for period 8 and width 17
+s UNSATISFIABLE for period 7 and width 19
+s UNSATISFIABLE for period 3 and width 39
+s UNSATISFIABLE for period 9 and width 16
+s UNSATISFIABLE for period 5 and width 25
+s UNSATISFIABLE for period 3 and width 40
+s UNSATISFIABLE for period 6 and width 22
+s UNSATISFIABLE for period 3 and width 41
+Solution Found for period 3!
+State: 125269471781760
+       ███   ████ ███ █  █  █  █ ███ ████   ███                                                                                                                                                                                                                 
+      █   ███ █████ █ ███ ██ ███ █ █████ ███   █                                                                                                                                                                                                                
+        ██  ████ ██   █ ██  ██ █   ██ ████  ██                                                                                                                                                                                                                  
+       ███   ████ ███ █  █  █  █ ███ ████   ███                                                                                                                                                                                                                 
+      █   ███ █████ █ ███ ██ ███ █ █████ ███   █                                                                                                                                                                                                                
+        ██  ████ ██   █ ██  ██ █   ██ ████  ██                                                                                                                                                                                                                  
+       ███   ████ ███ █  █  █  █ ███ ████   ███                                                                                                                                                                                                                 
+      █   ███ █████ █ ███ ██ ███ █ █████ ███   █                                                                                                                                                                                                                
+        ██  ████ ██   █ ██  ██ █   ██ ████  ██                                                                                                                                                                                                                  
+       ███   ████ ███ █  █  █  █ ███ ████   ███                                                                                                                                                                                                                 
+      █   ███ █████ █ ███ ██ ███ █ █████ ███   █                                                                                                                                                                                                                
+        ██  ████ ██   █ ██  ██ █   ██ ████  ██                                                                                                                                                                                                                  
+       ███   ████ ███ █  █  █  █ ███ ████   ███                                                                                                                                                                                                                 
+      █   ███ █████ █ ███ ██ ███ █ █████ ███   █                                                                                                                                                                                                                
+        ██  ████ ██   █ ██  ██ █   ██ ████  ██                                                                                                                                                                                                                  
+s UNSATISFIABLE for period 5 and width 26
+s UNSATISFIABLE for period 7 and width 20
+s UNSATISFIABLE for period 6 and width 23
+s UNSATISFIABLE for period 8 and width 18
+s UNSATISFIABLE for period 5 and width 27
+s UNSATISFIABLE for period 9 and width 17
+s UNSATISFIABLE for period 7 and width 21
+s UNSATISFIABLE for period 6 and width 24
+s UNSATISFIABLE for period 5 and width 28
+s UNSATISFIABLE for period 8 and width 19
+s UNSATISFIABLE for period 9 and width 18
+s UNSATISFIABLE for period 5 and width 29
+s UNSATISFIABLE for period 7 and width 22
+s UNSATISFIABLE for period 5 and width 30
+s UNSATISFIABLE for period 8 and width 20
+s UNSATISFIABLE for period 6 and width 25
+s UNSATISFIABLE for period 5 and width 31
+s UNSATISFIABLE for period 6 and width 26
+s UNSATISFIABLE for period 9 and width 19
+s UNSATISFIABLE for period 7 and width 23
+s UNSATISFIABLE for period 8 and width 21
+s UNSATISFIABLE for period 5 and width 32
+s UNSATISFIABLE for period 6 and width 27
+s UNSATISFIABLE for period 7 and width 24
+s UNSATISFIABLE for period 5 and width 33
+s UNSATISFIABLE for period 8 and width 22
+s UNSATISFIABLE for period 9 and width 20
+s UNSATISFIABLE for period 5 and width 34
+s UNSATISFIABLE for period 7 and width 25
+s UNSATISFIABLE for period 6 and width 28
+s UNSATISFIABLE for period 8 and width 23
+s UNSATISFIABLE for period 6 and width 29
+s UNSATISFIABLE for period 7 and width 26
+s UNSATISFIABLE for period 5 and width 35
+s UNSATISFIABLE for period 5 and width 36
+Solution Found for period 5!
+State: 756383924328
+   █ ██       ██ █████████ ██       ██ █                                                                                                                                                                                                                        
+   █  ██     ██ ███     ███ ██     ██  █                                                                                                                                                                                                                        
+    █ ███   ██ ██  █   █  ██ ██   ███ █                                                                                                                                                                                                                         
+    █ █  ████ █ █ █  █  █ █ █ ████  █ █                                                                                                                                                                                                                         
+    ████  ███  █ ████ ████ █  ███  ████                                                                                                                                                                                                                         
+   █ ██       ██ █████████ ██       ██ █                                                                                                                                                                                                                        
+   █  ██     ██ ███     ███ ██     ██  █                                                                                                                                                                                                                        
+    █ ███   ██ ██  █   █  ██ ██   ███ █                                                                                                                                                                                                                         
+    █ █  ████ █ █ █  █  █ █ █ ████  █ █                                                                                                                                                                                                                         
+    ████  ███  █ ████ ████ █  ███  ████                                                                                                                                                                                                                         
+   █ ██       ██ █████████ ██       ██ █                                                                                                                                                                                                                        
+   █  ██     ██ ███     ███ ██     ██  █                                                                                                                                                                                                                        
+    █ ███   ██ ██  █   █  ██ ██   ███ █                                                                                                                                                                                                                         
+    █ █  ████ █ █ █  █  █ █ █ ████  █ █                                                                                                                                                                                                                         
+    ████  ███  █ ████ ████ █  ███  ████                                                                                                                                                                                                                         
+   █ ██       ██ █████████ ██       ██ █                                                                                                                                                                                                                        
+   █  ██     ██ ███     ███ ██     ██  █                                                                                                                                                                                                                        
+    █ ███   ██ ██  █   █  ██ ██   ███ █                                                                                                                                                                                                                         
+    █ █  ████ █ █ █  █  █ █ █ ████  █ █                                                                                                                                                                                                                         
+    ████  ███  █ ████ ████ █  ███  ████                                                                                                                                                                                                                         
+   █ ██       ██ █████████ ██       ██ █                                                                                                                                                                                                                        
+   █  ██     ██ ███     ███ ██     ██  █                                                                                                                                                                                                                        
+    █ ███   ██ ██  █   █  ██ ██   ███ █                                                                                                                                                                                                                         
+    █ █  ████ █ █ █  █  █ █ █ ████  █ █                                                                                                                                                                                                                         
+    ████  ███  █ ████ ████ █  ███  ████                                                                                                                                                                                                                         
+s UNSATISFIABLE for period 6 and width 30
+s UNSATISFIABLE for period 9 and width 21
+s UNSATISFIABLE for period 7 and width 27
+s UNSATISFIABLE for period 8 and width 24
+s UNSATISFIABLE for period 6 and width 31
+s UNSATISFIABLE for period 7 and width 28
+s UNSATISFIABLE for period 9 and width 22
+s UNSATISFIABLE for period 8 and width 25
+s UNSATISFIABLE for period 6 and width 32
+s UNSATISFIABLE for period 7 and width 29
+s UNSATISFIABLE for period 9 and width 23
+s UNSATISFIABLE for period 6 and width 33
+s UNSATISFIABLE for period 8 and width 26
+s UNSATISFIABLE for period 7 and width 30
+s UNSATISFIABLE for period 6 and width 34
+s UNSATISFIABLE for period 9 and width 24
+s UNSATISFIABLE for period 7 and width 31
+s UNSATISFIABLE for period 8 and width 27
+s UNSATISFIABLE for period 6 and width 35
+s UNSATISFIABLE for period 9 and width 25
+s UNSATISFIABLE for period 7 and width 32
+s UNSATISFIABLE for period 6 and width 36
+s UNSATISFIABLE for period 8 and width 28
+s UNSATISFIABLE for period 7 and width 33
+s UNSATISFIABLE for period 9 and width 26
+s UNSATISFIABLE for period 6 and width 37
+s UNSATISFIABLE for period 7 and width 34
+s UNSATISFIABLE for period 8 and width 29
+s UNSATISFIABLE for period 6 and width 38
+s UNSATISFIABLE for period 9 and width 27
+s UNSATISFIABLE for period 7 and width 35
+s UNSATISFIABLE for period 6 and width 39
+s UNSATISFIABLE for period 7 and width 36
+s UNSATISFIABLE for period 8 and width 30
+s UNSATISFIABLE for period 6 and width 40
+s UNSATISFIABLE for period 9 and width 28
+s UNSATISFIABLE for period 7 and width 37
+s UNSATISFIABLE for period 6 and width 41
+s UNSATISFIABLE for period 6 and width 42
+s UNSATISFIABLE for period 8 and width 31
+s UNSATISFIABLE for period 7 and width 38
+s UNSATISFIABLE for period 9 and width 29
+s UNSATISFIABLE for period 6 and width 43
+s UNSATISFIABLE for period 7 and width 39
+s UNSATISFIABLE for period 8 and width 32
+s UNSATISFIABLE for period 6 and width 44
+s UNSATISFIABLE for period 7 and width 40
+s UNSATISFIABLE for period 9 and width 30
+s UNSATISFIABLE for period 6 and width 45
+s UNSATISFIABLE for period 7 and width 41
+s UNSATISFIABLE for period 8 and width 33
+s UNSATISFIABLE for period 6 and width 46
+s UNSATISFIABLE for period 9 and width 31
+s UNSATISFIABLE for period 7 and width 42
+s UNSATISFIABLE for period 6 and width 47
+s UNSATISFIABLE for period 8 and width 34
+s UNSATISFIABLE for period 7 and width 43
+s UNSATISFIABLE for period 6 and width 48
+s UNSATISFIABLE for period 7 and width 44
+s UNSATISFIABLE for period 8 and width 35
+s UNSATISFIABLE for period 6 and width 49
+s UNSATISFIABLE for period 9 and width 32
+s UNSATISFIABLE for period 7 and width 45
+s UNSATISFIABLE for period 6 and width 50
+s UNSATISFIABLE for period 7 and width 46
+s UNSATISFIABLE for period 6 and width 51
+s UNSATISFIABLE for period 9 and width 33
+s UNSATISFIABLE for period 8 and width 36
+s UNSATISFIABLE for period 7 and width 47
+s UNSATISFIABLE for period 6 and width 52
+s UNSATISFIABLE for period 7 and width 48
+s UNSATISFIABLE for period 9 and width 34
