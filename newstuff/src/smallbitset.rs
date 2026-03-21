@@ -1,6 +1,6 @@
 use std::hash::{Hash, Hasher};
 
-const WORDS: usize = 8; // supports up to 256 NFA states; adjust as needed
+const WORDS: usize = 65536; // supports up to 256 NFA states; adjust as needed
 
 #[derive(Clone, Copy, Eq, PartialEq, Ord, PartialOrd)]
 pub struct SmallBitSet {

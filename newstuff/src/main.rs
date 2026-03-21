@@ -3,9 +3,10 @@ use rayon::prelude::*;
 
 use dashmap::DashSet;
 
-pub mod smallbitset;
+// pub mod smallbitset;
+// use smallbitset::SmallBitSet;
 
-use smallbitset::SmallBitSet;
+use bit_set::BitSet as SmallBitSet;
 
 const K: usize = 2;
 
@@ -49,7 +50,8 @@ impl Net {
         let seen: DashSet<SmallBitSet> = DashSet::new();
         seen.insert(SmallBitSet::new());
 
-        let mut curr: Vec<SmallBitSet> = vec![SmallBitSet::from_range(n)];
+        // let mut curr: Vec<SmallBitSet> = vec![SmallBitSet::from_range(n)];
+        let mut curr: Vec<SmallBitSet> = vec![(0..n).collect()];
 
         let mut count = 0;
         let mut prevlen = 0;
@@ -61,7 +63,7 @@ impl Net {
             prevlen = curr.len();
 
             for s in &curr {
-                seen.insert(*s);
+                seen.insert(s.clone());
             }
 
             eprintln!("    Part 1 complete.");
@@ -73,7 +75,7 @@ impl Net {
                     let mut next = SmallBitSet::new();
                     for node in nodes.iter() {
                         for &target in &self.r[node][a] {
-                            next.set(target);
+                            next.insert(target);
                         }
                     }
                     if !seen.contains(&next) && !new_seen.contains(&next) {
@@ -90,7 +92,7 @@ impl Net {
             eprintln!("    Part 3 complete.");
         }
 
-        let mut o: Vec<Vec<usize>> = seen.into_iter().map(|s| s.to_vec()).collect();
+        let mut o: Vec<Vec<usize>> = seen.into_iter().map(|s| s.iter().collect()).collect();
         o.sort();
         o
     }
@@ -166,6 +168,47 @@ impl Net {
         result.sort_unstable();
         result.dedup();
         result
+    }
+
+    fn select(&self, keep: &[usize]) -> Net {
+        // Build old index -> new index mapping
+        let mut old_to_new: HashMap<usize, usize> = HashMap::with_capacity(keep.len());
+        for (new_idx, &old_idx) in keep.iter().enumerate() {
+            old_to_new.insert(old_idx, new_idx);
+        }
+
+        let r = keep
+            .iter()
+            .map(|&old_idx| {
+                std::array::from_fn(|a| {
+                    self.r[old_idx][a]
+                        .iter()
+                        .filter_map(|&target| old_to_new.get(&target).copied())
+                        .collect()
+                })
+            })
+            .collect();
+
+        Net { r }
+    }
+
+    fn without_unreachable(&self) -> Net {
+        let mut reachable: Vec<usize> = vec![0];
+
+        let mut numreachable = reachable.len();
+        let mut prevnumreachable = numreachable + 1;
+
+        while prevnumreachable != numreachable {
+            let new: Vec<usize> = (0..K).flat_map(|a| self.net_step(&reachable, a).into_iter()).collect();
+            reachable.extend_from_slice(&new);
+            reachable.sort();
+            reachable.dedup();
+
+            prevnumreachable = numreachable;
+            numreachable = reachable.len();
+        }
+
+        self.select(&reachable)
     }
 
     /// Minimize the NFA by subset construction + partition refinement.
@@ -319,8 +362,59 @@ impl Net {
                     .collect::<Vec<String>>().join(",")
                 ).collect::<Vec<String>>()
             ).collect();
+        
+        if o.len() > 1_000_000 {
+            return format!("{{}}");
+        }
 
         format!("{o:?}").replace("[", "{").replace("]", "}").replace("\"", "").replace("{, ", "{").replace(", }", "}")
+    }
+
+    fn paths(self, len: usize, max: usize) -> Vec<Path> {
+        let mut o = vec![Path::new(0)];
+
+        for i in 0..len {
+            o = o.into_iter().flat_map(|path| 
+                path.push_multiple(&self.r[path.nodes[i]]).into_iter()
+            ).collect();
+
+            o.sort();
+            o.dedup();
+
+            if o.len() > max {
+                o = o[..max].to_vec();
+                o.reverse();
+            }
+        }
+
+        o
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
+struct Path {
+    nodes: Vec<usize>,
+    collected: Vec<usize>
+}
+
+impl Path {
+    fn new(start: usize) -> Self {
+        Path {nodes: vec![start], collected: vec![] }
+    }
+
+    fn push(&mut self, node: usize, char: usize) {
+        self.nodes.push(node);
+        self.collected.push(char);
+    }
+
+    fn push_multiple(&self, netnode: &[Vec<usize>; K]) -> Vec<Self> {
+        (0..K).flat_map(|char|
+            netnode[char].clone().into_iter().map(move |node| {
+                let mut o = self.clone();
+                o.push(node, char);
+                o
+            })
+        ).collect()
     }
 }
 
@@ -328,20 +422,33 @@ fn mf(s: String, lab: &str, i: usize) -> String {
     format!("Export[\"renders/{lab}{i}.png\", Labeled[NetVisualize[{s}], \"{lab}{i}\"]];")
 }
 
-fn run_rule126() {
+fn bits(n: usize, l: usize) -> Vec<usize> {
+    assert!(n >> l == 0);
+    (0..l).map(|i| (n >> i) & 1).collect()
+}
 
-    let rule = (1, vec![0, 1, 1, 1, 1, 1, 1, 0]);
+fn run_rule126() {
+    // let code20rulenumber = 1771476584;
+
+    // let rule = (2, bits(1771476584, 32));
+    let rule = (1, bits(126, 8));
 
     let mut o = Net::all_net();
 
-    println!("{}", mf(o.to_mathematica(), "AllNet", 0));
+    println!("{}", mf(o.to_mathematica(), "0AllNet", 0));
 
     for iter in 0..4 {
         o = o.ca_step(rule.clone());
-        println!("{}", mf(o.to_mathematica(), "stepped", iter));
+        println!("{}", mf(o.to_mathematica(), "1stepped", iter));
+        o = o.without_unreachable();
+        println!("{}", mf(o.to_mathematica(), "2withoutunreachable", iter));
         o = o.min_net().expect("whoops");
-        println!("{}", mf(o.to_mathematica(), "minimized", iter));
+        println!("{}", mf(o.to_mathematica(), "3minimized", iter));
     }
+
+    let paths = o.paths(64, 32);
+    let string = format!("Paths: {:?}", paths.into_iter().map(|path| path.collected).collect::<Vec<Vec<usize>>>()).replace("[", "{").replace("]", "}");
+    eprintln!("{string}");
 }
 
 fn main() {
