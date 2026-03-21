@@ -1,4 +1,4 @@
-use hashbrown::{HashMap}; 
+use hashbrown::{HashMap, HashSet}; 
 use rayon::prelude::*;
 
 use dashmap::DashSet;
@@ -44,120 +44,201 @@ impl Net {
         o
     }
 
-    fn dsets(self) -> Vec<Vec<usize>> {
+
+/// Reverse all edges. Does NOT add a super-start node.
+    fn reverse_edges(&self) -> Net {
+        eprintln!("Reversing Started");
+
+        let n = self.r.len();
+        let mut r: Vec<[Vec<usize>; K]> = vec![std::array::from_fn(|_| Vec::new()); n];
+        for s in 0..n {
+            for a in 0..K {
+                for &t in &self.r[s][a] {
+                    r[t][a].push(s);
+                }
+            }
+        }
+
+        eprintln!("    Reversing Complete");
+
+        Net { r }
+    }
+
+    /// Determinize via subset construction.
+    /// `start_states`: the set of NFA states that form the initial DFA state.
+    /// `accept_states`: which NFA states are accepting.
+    /// Returns (DFA as Net, set of accepting DFA state indices).
+    /// The dead state (empty set) is excluded; transitions to it become empty.
+    fn determinize(
+        &self,
+        start_states: &[usize],
+        accept_states: &HashSet<usize>,
+    ) -> (Net, HashSet<usize>) {
         let n = self.r.len();
 
-        let seen: DashSet<SmallBitSet> = DashSet::new();
-        seen.insert(SmallBitSet::new());
+        eprintln!("Starting Determinization");
 
-        // let mut curr: Vec<SmallBitSet> = vec![SmallBitSet::from_range(n)];
-        let mut curr: Vec<SmallBitSet> = vec![(0..n).collect()];
+        // Precompute transition images as bitsets
+        let images: Vec<[SmallBitSet; K]> = (0..n)
+            .map(|s| {
+                std::array::from_fn(|a| {
+                    let mut bs = SmallBitSet::new();
+                    for &t in &self.r[s][a] {
+                        bs.insert(t);
+                    }
+                    bs
+                })
+            })
+            .collect();
+
+        eprintln!("    Step 1 Complete");
+
+        // Precompute accept mask for O(WORDS) acceptance check
+        // instead of iterating all accept_states
+        let accept_mask: SmallBitSet = {
+            let mut s = SmallBitSet::new();
+            for &a in accept_states {
+                s.insert(a);
+            }
+            s
+        };
+
+        let step = |set: &SmallBitSet, a: usize| -> SmallBitSet {
+            let mut result = SmallBitSet::new();
+            for s in set.iter() {
+                result.union_with(&images[s][a]);
+            }
+            result
+        };
+
+        eprintln!("    Step 2 Complete");
+
+        let start: SmallBitSet = {
+            let mut s = SmallBitSet::new();
+            for &st in start_states {
+                s.insert(st);
+            }
+            s
+        };
+
+        let empty = SmallBitSet::new();
+
+        let mut state_map: HashMap<SmallBitSet, usize> = HashMap::new();
+        state_map.insert(start.clone(), 0);
+
+        let mut queue: Vec<SmallBitSet> = vec![start];
+        let mut transitions: Vec<[Option<usize>; K]> = Vec::new();
+        let mut dfa_accept: HashSet<usize> = HashSet::new();
+
+        let mut head = 0;
 
         let mut count = 0;
-        let mut prevlen = 0;
 
-        while !curr.is_empty() {
+        while head < queue.len() {
+            let batch_end = queue.len();
+            let batch = &queue[head..batch_end];
 
-            eprintln!("    Iter {count}, {}, {}, {:.2}% Inc", seen.len(), curr.len(), 100. * curr.len() as f64 / prevlen as f64);
+            if batch.is_empty() {
+                break;
+            }
+
+            // eprintln!(
+            //     "        batch {head}..{batch_end} ({}), total {}",
+            //     batch.len(),
+            //     queue.len()
+            // );
+
+            eprintln!("        iter {count}, {} / {}, {:.2}%", batch.len(), queue.len(), 100. - 100. * batch.len() as f64 / queue.len() as f64 );
             count += 1;
-            prevlen = curr.len();
 
-            for s in &curr {
-                seen.insert(s.clone());
-            }
-
-            eprintln!("    Part 1 complete.");
-
-            let new_seen: DashSet<SmallBitSet> = DashSet::new();
-
-            curr.par_iter().for_each(|nodes| {
-                for a in 0..K {
-                    let mut next = SmallBitSet::new();
-                    for node in nodes.iter() {
-                        for &target in &self.r[node][a] {
-                            next.insert(target);
-                        }
-                    }
-                    if !seen.contains(&next) && !new_seen.contains(&next) {
-                        new_seen.insert(next);
-                    }
-                }
-            });
-
-            eprintln!("    Part 2 complete.");
-
-
-            curr = new_seen.into_iter().collect();
-
-            eprintln!("    Part 3 complete.");
-        }
-
-        let mut o: Vec<Vec<usize>> = seen.into_iter().map(|s| s.iter().collect()).collect();
-        o.sort();
-        o
-    }
-
-    fn isets(list: &[Vec<usize>]) -> Vec<Vec<usize>> {
-        let n = list.len();
-        if n == 0 {
-            return vec![];
-        }
-        if n == 1 {
-            return vec![vec![0]];
-        }
-
-        // Initial partition: {{0}, {1, 2, ..., n-1}}  (0-indexed)
-        let mut g: Vec<Vec<usize>> = vec![vec![0], (1..n).collect()];
-
-        loop {
-            // Build mapping: index -> group number
-            let mut group_of = vec![0usize; n];
-            for (gi, group) in g.iter().enumerate() {
-                for &idx in group {
-                    group_of[idx] = gi;
-                }
-            }
-
-            // Compute signature for each row:
-            //   replace each element with the group number it belongs to
-            let signatures: Vec<Vec<usize>> = list
-                .iter()
-                .map(|row| row.iter().map(|&elem| group_of[elem]).collect())
+            // Parallel: compute all K successors for each state in batch
+            let successors: Vec<[SmallBitSet; K]> = batch
+                .par_iter()
+                .map(|current| std::array::from_fn(|a| step(current, a)))
                 .collect();
 
-            // Refine: split each group by signature
-            let mut new_g: Vec<Vec<usize>> = Vec::new();
+            // Sequential: assign indices, record transitions, check acceptance
+            for (i, succs) in successors.into_iter().enumerate() {
+                let state_idx = head + i;
 
-            for group in &g {
-                // Pair each index in this group with its signature
-                let mut pairs: Vec<(&Vec<usize>, usize)> = group
-                    .iter()
-                    .map(|&idx| (&signatures[idx], idx))
-                    .collect();
-
-                // Sort by signature
-                pairs.sort_by(|a, b| a.0.cmp(b.0));
-
-                // Split into runs of equal signatures
-                let mut i = 0;
-                while i < pairs.len() {
-                    let mut j = i + 1;
-                    while j < pairs.len() && pairs[j].0 == pairs[i].0 {
-                        j += 1;
-                    }
-                    let subgroup: Vec<usize> = pairs[i..j].iter().map(|&(_, idx)| idx).collect();
-                    new_g.push(subgroup);
-                    i = j;
+                // Bitwise accept check — O(WORDS) instead of O(|accept_states|)
+                if !queue[state_idx].is_disjoint(&accept_mask) {
+                    dfa_accept.insert(state_idx);
                 }
+
+                let trans: [Option<usize>; K] = std::array::from_fn(|a| {
+                    if succs[a] == empty {
+                        None
+                    } else {
+                        let next_idx =
+                            if let Some(&idx) = state_map.get(&succs[a]) {
+                                idx
+                            } else {
+                                let idx = queue.len();
+                                state_map.insert(succs[a].clone(), idx);
+                                queue.push(succs[a].clone());
+                                idx
+                            };
+                        Some(next_idx)
+                    }
+                });
+                transitions.push(trans);
             }
 
-            // Fixed point check
-            if new_g == g {
-                return g;
-            }
-            g = new_g;
+            head = batch_end;
         }
+
+        eprintln!("    Step 3 Complete");
+
+        let r = transitions
+            .into_iter()
+            .map(|trans| {
+                std::array::from_fn(|a| match trans[a] {
+                    Some(idx) => vec![idx],
+                    None => vec![],
+                })
+            })
+            .collect();
+
+        eprintln!("    Step 4 Complete");
+
+        (Net { r }, dfa_accept)
     }
+
+    /// Brzozowski minimization.
+    /// Original NFA: start = all states, accept = all states.
+    fn minimize_brzozowski(&self) -> Net {
+        let n = self.r.len();
+        let all_states: Vec<usize> = (0..n).collect();
+        let all_accept: HashSet<usize> = (0..n).collect();
+
+        // Step 1: Reverse edges
+        eprintln!("Step 1: reverse ({} states)", n);
+        let rev1 = self.reverse_edges();
+
+        // Step 2: Determinize reversed NFA
+        // start = all (old accept = all), accept = all (old start = all)
+        eprintln!("Step 2: determinize");
+        let (det1, det1_accept) = rev1.determinize(&all_states, &all_accept);
+        eprintln!("  {} states, {} accepting", det1.r.len(), det1_accept.len());
+
+        // Step 3: Reverse the intermediate DFA
+        eprintln!("Step 3: reverse");
+        let rev2 = det1.reverse_edges();
+
+        // Step 4: Determinize again
+        // DFA start was state 0 → that's now an accept state
+        // DFA accepts → those are now start states
+        let det1_accept_vec: Vec<usize> = det1_accept.iter().copied().collect();
+        let det1_start_set: HashSet<usize> = [0].into_iter().collect();
+
+        eprintln!("Step 4: determinize");
+        let (det2, _det2_accept) = rev2.determinize(&det1_accept_vec, &det1_start_set);
+        eprintln!("  {} states", det2.r.len());
+
+        det2
+    }
+
 
     /// Compute the set of NFA states reachable from `state_set` on symbol `a`.
     fn net_step(&self, state_set: &[usize], a: usize) -> Vec<usize> {
@@ -209,150 +290,6 @@ impl Net {
         }
 
         self.select(&reachable)
-    }
-
-    /// Minimize the NFA by subset construction + partition refinement.
-    ///
-    /// Returns `None` if the dead state is unreachable (i.e., the automaton
-    /// accepts everything — the "AllNet" case).
-    ///
-    /// Returns `Some(minimized_net)` otherwise, where transitions to the
-    /// dead state are represented as empty `Vec`s.
-    fn min_net(&self) -> Option<Net> {
-        eprintln!("Minimizing:");
-
-        let n = self.r.len();
-        if n == 0 {
-            return None;
-        }
-
-        // Step 1: Subset construction — compute reachable DFA states.
-        // dsets() returns sorted subsets; d[0] == [] (the dead state)
-        // if it is reachable.
-        let d = self.clone().dsets();
-
-        if d.is_empty() || !d[0].is_empty() {
-            // Dead state not reachable => accepts all inputs => "AllNet"
-            return None;
-        }
-
-        eprintln!("    Step 1 Complete");
-
-        // Step 2: Build fast lookup from subset -> index in d.
-        let d_index: HashMap<&Vec<usize>, usize> = d
-            .iter()
-            .enumerate()
-            .map(|(i, s)| (s, i))
-            .collect();
-
-        eprintln!("    Step 2 Complete");
-
-        // Step 3: Build DFA transition table.
-        // b[i][a] = index in d of the state reached from d[i] on symbol a.
-        let b: Vec<Vec<usize>> = d
-            .par_iter()
-            .map(|state_set| {
-                (0..K)
-                    .map(|a| {
-                        let next = self.net_step(state_set, a);
-                        *d_index
-                            .get(&next)
-                            .expect("NetStep produced a state not in DSets")
-                    })
-                    .collect()
-            })
-            .collect();
-
-        eprintln!("    Step 3 Complete");
-
-        // Step 4: Partition refinement on the DFA transition table.
-        let q = Net::isets(&b);
-        
-        eprintln!("    Step 4.isets Complete");
-
-        // Build reverse map: DFA state index -> equivalence class index.
-        let mut class_of = vec![0usize; d.len()];
-        for (ci, class) in q.iter().enumerate() {
-            for &state in class {
-                class_of[state] = ci;
-            }
-        }
-
-        eprintln!("    Step 4 Complete");
-
-        // Step 5: Build the minimized automaton.
-
-        // The dead state is d[0] = []. Its equivalence class is the one
-        // containing index 0.
-        let dead_class = class_of[0];
-
-        // Assign new contiguous indices to live (non-dead) equivalence classes.
-        let mut new_index = vec![0usize; q.len()];
-        let mut count = 0usize;
-        for ci in 0..q.len() {
-            if ci != dead_class {
-                new_index[ci] = count;
-                count += 1;
-            }
-        }
-
-        eprintln!("    Step 5.1 Complete");
-
-        // Build the minimized transition table.
-        let mut r: Vec<[Vec<usize>; K]> = Vec::with_capacity(count);
-        for ci in 0..q.len() {
-            if ci == dead_class {
-                continue;
-            }
-            let rep = q[ci][0]; // representative of this equivalence class
-            let transitions: [Vec<usize>; K] = std::array::from_fn(|a| {
-                let target_class = class_of[b[rep][a]];
-                if target_class != dead_class {
-                    vec![new_index[target_class]]
-                } else {
-                    vec![] // transition to dead state — omitted
-                }
-            });
-            r.push(transitions);
-        }
-
-        eprintln!("    Step 5.2 Complete");
-
-        // Identify the start state: the equivalence class of the initial
-        // DFA state. The initial DFA state is the full set {0, 1, ..., n-1},
-        // which is the last element of d (since d is sorted and this is the
-        // largest subset that was seeded).
-        let initial_dfa_state: Vec<usize> = (0..n).collect();
-        let initial_index = *d_index
-            .get(&initial_dfa_state)
-            .expect("Initial state set not found in DSets");
-        let start_class = class_of[initial_index];
-        let start = new_index[start_class];
-
-        eprintln!("    Step 5.3 Complete");
-
-        // If start is already 0, we're done. Otherwise, swap row 0 and
-        // row `start`, and update all references.
-        if start != 0 {
-            r.swap(0, start);
-            // Fix up all transition targets: anything pointing to 0
-            // should now point to `start` and vice versa.
-            for row in r.iter_mut() {
-                for a in 0..K {
-                    for target in row[a].iter_mut() {
-                        if *target == 0 {
-                            *target = start;
-                        } else if *target == start {
-                            *target = 0;
-                        }
-                    }
-                }
-            }
-        }
-
-        eprintln!("    Step 5.4 Complete");
-
-        Some(Net { r })
     }
 
     fn to_mathematica(&self) -> String {
@@ -437,12 +374,12 @@ fn run_rule126() {
 
     println!("{}", mf(o.to_mathematica(), "0AllNet", 0));
 
-    for iter in 0..4 {
+    for iter in 0..5 {
         o = o.ca_step(rule.clone());
         println!("{}", mf(o.to_mathematica(), "1stepped", iter));
         o = o.without_unreachable();
         println!("{}", mf(o.to_mathematica(), "2withoutunreachable", iter));
-        o = o.min_net().expect("whoops");
+        o = o.minimize_brzozowski();
         println!("{}", mf(o.to_mathematica(), "3minimized", iter));
     }
 
