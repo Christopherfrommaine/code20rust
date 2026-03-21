@@ -1,8 +1,6 @@
 use hashbrown::{HashMap, HashSet}; 
 use rayon::prelude::*;
 
-use dashmap::DashSet;
-
 // pub mod smallbitset;
 // use smallbitset::SmallBitSet;
 
@@ -367,8 +365,8 @@ fn bits(n: usize, l: usize) -> Vec<usize> {
 fn run_rule126() {
     // let code20rulenumber = 1771476584;
 
-    // let rule = (2, bits(1771476584, 32));
-    let rule = (1, bits(126, 8));
+    let rule = (2, bits(1771476584, 32));
+    // let rule = (1, bits(126, 8));
 
     let mut o = Net::all_net();
 
