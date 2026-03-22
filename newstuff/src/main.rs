@@ -358,7 +358,7 @@ fn mf(s: String, lab: &str, i: usize) -> String {
 }
 
 fn bits(n: usize, l: usize) -> Vec<usize> {
-    assert!(n >> l == 0);
+    assert!(n >> l == 0);   
     (0..l).map(|i| (n >> i) & 1).collect()
 }
 
