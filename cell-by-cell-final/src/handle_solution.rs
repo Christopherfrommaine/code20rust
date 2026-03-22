@@ -86,7 +86,8 @@ fn save_rendered_solution(sol: Int, period: usize, shift: usize) {
     save_render_to_file(array_plot(arr), &format!("renders/solution_p{period}_s{shift}_n{sol}.txt"));
 }
 
-pub fn handle_found_solution(sol: Int, period: usize, shift: usize) {
+pub fn handle_found_solution(sol: Int, period: usize) {
+    let shift = 0;
     println!("Found Solution: {sol}");
 
     log_solution_to_file(sol, period, shift);

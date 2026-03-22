@@ -35,20 +35,38 @@ pub fn to_u128(n: Int) -> u128 {
     *(n.digits().first().unwrap()) as u128
 }
 
+static MASK_FIRST_BITS_CACHE: std::sync::LazyLock<Vec<Int>> = std::sync::LazyLock::new(|| 
+    (0..BITS).map(|n| {
+        let mut o = [0u64; BITS / 64];
+        let max = n / 64;
+        for i in 0..max {
+            o[i] = u64::MAX
+        }
+        for i in (64 * max)..n {
+            o[max] |= 1 << (i % 64)
+        }
+        
+        Int::from_digits(o)
+    }).collect::<Vec<Int>>()
+);
 
-#[allow(dead_code)]
+// #[inline(always)]
+// pub fn mask_first_bits(n: usize) -> Int {
+//     let mut o = [0u64; BITS / 64];
+//     let max = n / 64;
+//     for i in 0..max {
+//         o[i] = u64::MAX
+//     }
+//     for i in (64 * max)..n {
+//         o[max] |= 1 << (i % 64)
+//     }
+//     
+//     Int::from_digits(o)
+// }
+
 #[inline(always)]
 pub fn mask_first_bits(n: usize) -> Int {
-    let mut o = [0u64; BITS / 64];
-    let max = n / 64;
-    for i in 0..max {
-        o[i] = u64::MAX
-    }
-    for i in (64 * max)..n {
-        o[max] |= 1 << (i % 64)
-    }
-    
-    Int::from_digits(o)
+    MASK_FIRST_BITS_CACHE[n]
 }
 
 #[cfg(test)]

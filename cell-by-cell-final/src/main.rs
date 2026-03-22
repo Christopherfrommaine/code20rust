@@ -18,9 +18,10 @@ fn main() {
         .stack_size(1024 * 1024 * 1024) // stack size in bytes
         .build_global()
         .unwrap();
+    
 
     // Solve for all new periods
     for p in starting_index.. {
-        solve(p, 0);
+        solve(p);
     }
 }
