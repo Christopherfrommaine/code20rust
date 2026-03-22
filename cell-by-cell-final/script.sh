@@ -7,3 +7,4 @@
 #SBATCH -t 02:00:00
 
 cd ~/code20rust/cell-by-cell-final
+cargo r --release >> log.txt
