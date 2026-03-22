@@ -46,7 +46,8 @@ pub fn solve_dfs(n: Int, len: usize, p: usize, s: usize) -> u64 {
     // Depth Exceeded
     if len > BITS - 2 * p - 5 {
         eprintln!("DEPTH LIMIT REACHED\n{n}");
-        std::process::exit(1);
+        // std::process::exit(1);
+        return 0;
     }
 
     // Run the automata
@@ -67,23 +68,23 @@ pub fn solve_dfs(n: Int, len: usize, p: usize, s: usize) -> u64 {
     // Check Gaps (for concatonated solutions)
     if s == 0 && !gap_length_less_than(collected & mask, 2) {return 1;}
 
-    // Tilability check (for infinitely repeatable patterns)
-    let mut n_count_ones;  // deffered for speed
-    for pattern_length in 1..((len + 1) / 2) {
-        let pattern = unsafe { n & (mask_first_bits(pattern_length).unchecked_shl((len - pattern_length) as u32 + 1)) };
-
-        if pattern == zero() {continue;}
-        
-        let mut rep = zero();
-        for i in 0..((len / pattern_length) + 1) {
-            rep |= unsafe { pattern.unchecked_shr((pattern_length * i) as u32) }
-        }
-
-        n_count_ones = n.count_ones();
-        if (n ^ rep).count_ones() + 10 < n_count_ones / 2 {
-            return 1;
-        }
-    }
+    // // Tilability check (for infinitely repeatable patterns)
+    // let mut n_count_ones;  // deffered for speed
+    // for pattern_length in 1..((len + 1) / 2) {
+    //     let pattern = unsafe { n & (mask_first_bits(pattern_length).unchecked_shl((len - pattern_length) as u32 + 1)) };
+    // 
+    //     if pattern == zero() {continue;}
+    //     
+    //     let mut rep = zero();
+    //     for i in 0..((len / pattern_length) + 1) {
+    //         rep |= unsafe { pattern.unchecked_shr((pattern_length * i) as u32) }
+    //     }
+    // 
+    //     n_count_ones = n.count_ones();
+    //     if (n ^ rep).count_ones() + 10 < n_count_ones / 2 {
+    //         return 1;
+    //     }
+    // }
 
     // Check for Solution
     if o == n {
@@ -137,7 +138,6 @@ pub fn solve_dfs(n: Int, len: usize, p: usize, s: usize) -> u64 {
 
         nodes_searched += ns1 + ns2;
     }
-    
 
     nodes_searched
     

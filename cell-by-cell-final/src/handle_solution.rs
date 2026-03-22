@@ -27,6 +27,23 @@ pub fn log_to_file(string: String) {
     }
 }
 
+pub fn save_render_to_file(string: String, filename: &str) {
+    
+    let mut file = match std::fs::OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open(filename)
+    {
+        Ok(f) => f,
+        Err(_) => return,
+    };
+
+    if std::io::Write::write_all(&mut file, string.as_bytes()).is_err() {
+        eprintln!("Error writing log to file!");
+        return;
+    }
+}
+
 fn log_solution_to_file(sol: Int, period: usize, shift: usize) {
     log_to_file(format!("n{sol} p{period} s{shift}\n"));
 }
@@ -51,20 +68,22 @@ fn solution_to_array(sol: Int, period: usize, shift: usize) -> Vec<Vec<u8>> {
     arr
 }
 
+fn array_plot(arr: Vec<Vec<u8>>) -> String {
+    arr.into_iter().map(|row|
+        row.into_iter().map(|e|
+        
+        if e == 0 {' '}
+        else if e == 1 {'█'}
+        else {'?'}
+
+        ).collect::<String>()
+    ).collect::<Vec<String>>().join("\n")
+}
+
 fn save_rendered_solution(sol: Int, period: usize, shift: usize) {
     let arr = solution_to_array(sol, period, shift);
-
-    let string = format!("p{period}_s{shift}_n{sol}");
-    let string = if string.len() < 100 {string} else {string[..100].to_string()};
-
-
-    use cgrustplot::{plots::array_plot::array_plot};
-    array_plot(&arr)
-        .set_axes(false)
-        .set_title(&string)
-        .save(&format!("renders/solution_p{period}_s{shift}_n{sol}.txt"))
-        // .as_image()
-        // .save(&format!("renders/solution_{string}.png"));
+    
+    save_render_to_file(array_plot(arr), &format!("renders/solution_p{period}_s{shift}_n{sol}.txt"));
 }
 
 pub fn handle_found_solution(sol: Int, period: usize, shift: usize) {
@@ -103,5 +122,5 @@ pub fn read_starting_index() -> usize {
         if line.starts_with("(p") {
             line[2..(line.len() - 6)].parse::<usize>().ok()
         } else {None}
-    ).last().unwrap()
+    ).last().unwrap_or(1)
 }

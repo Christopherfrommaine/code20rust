@@ -3,7 +3,7 @@ pub mod handle_solution;
 pub mod solver;
 
 use crate::solver::*;
-use crate::handle_solution::{clear_renders, clear_output_file, read_starting_index};
+use crate::handle_solution::{clear_renders, read_starting_index};
 
 fn main() {
     // Pickup from last computation
